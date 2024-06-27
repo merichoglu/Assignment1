@@ -302,6 +302,10 @@ public class ClientHandler extends Thread {
         String password = st.nextToken();
         boolean isAdmin = Boolean.parseBoolean(st.nextToken());
 
+        if (!dbHandler.userExists(username)) {
+            output.println("\nUser not found.");
+            return;
+        }
         LocalDate parsedBirthdate;
         if (!isValidDate(birthdate)) {
             output.println("\n\nInvalid birthdate. Please use YYYY-MM-DD, and make sure values are correct.");
