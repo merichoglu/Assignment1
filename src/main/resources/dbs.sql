@@ -1,3 +1,5 @@
+-- noinspection SqlNoDataSourceInspectionForFile
+
 -- noinspection SpellCheckingInspectionForFile
 
 -- Create the 'users' table
