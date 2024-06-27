@@ -21,6 +21,43 @@ This is a simple chat application implemented in Java. The application consists 
 - Java Development Kit (JDK) 8 or higher (due to the PostgreSQL driver used)
 - A relational database (e.g., MySQL, PostgreSQL) (PostgreSQL is recommended)
 
+### Installation
+
+1. Clone the repository:
+
+   ```sh
+   git clone https://github.com/yourusername/chat-application.git
+   cd chat-application
+   ```
+
+2. Compile the Java files:
+
+   ```sh
+   javac -cp lib/postgresql-42.7.3.jar -d out/production/SRDC src/main/java/com/srdc/messageapp/*.java
+   ```
+
+3. Set up your database:
+   - Create a database and necessary tables. Refer to the `DatabaseHandler.java` for table structure.
+   - Update the database connection details in the `DatabaseHandler.java` file.
+
+### Running the Application
+
+While inside the *Assignment 1* folder
+
+1. Start the server:
+
+   ```sh
+   java -cp "lib/postgresql-42.7.3.jar" src/main/java/com/srdc/messageapp/Server.java
+   ```
+
+2. Start the client(s):
+
+   ```sh
+   java src/main/java/com/srdc/messageapp/Client.java
+   ```
+
+   - Follow the prompts to connect to the server and start chatting.
+
 ## File Descriptions
 
 ### Client.java
