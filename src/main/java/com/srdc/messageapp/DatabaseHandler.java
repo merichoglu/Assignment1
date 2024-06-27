@@ -177,18 +177,36 @@ public class DatabaseHandler {
         if (!admin.isAdmin()) {
             throw new Exception("Only admins can remove users.");
         }
-        String query = "DELETE FROM users WHERE username = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, username);
-            int rowsAffected = stmt.executeUpdate();
+        String updateSenderQuery = "UPDATE messages SET sender = NULL WHERE sender = ?";
+        String updateReceiverQuery = "UPDATE messages SET receiver = NULL WHERE receiver = ?";
+        String deleteUserQuery = "DELETE FROM users WHERE username = ?";
+
+        try (PreparedStatement updateSenderStmt = connection.prepareStatement(updateSenderQuery);
+             PreparedStatement updateReceiverStmt = connection.prepareStatement(updateReceiverQuery);
+             PreparedStatement deleteUserStmt = connection.prepareStatement(deleteUserQuery)) {
+
+            // nullify sender
+            updateSenderStmt.setString(1, username);
+            updateSenderStmt.executeUpdate();
+
+            // nullify receiver
+            updateReceiverStmt.setString(1, username);
+            updateReceiverStmt.executeUpdate();
+
+            // Delete user
+            deleteUserStmt.setString(1, username);
+            int rowsAffected = deleteUserStmt.executeUpdate();
             if (rowsAffected == 0) {
                 throw new SQLException("User not found or could not be deleted.");
             }
+
             System.out.println("User removed successfully.");
         } catch (SQLException e) {
             System.err.println("Error removing user: " + e.getMessage());
+            throw e;
         }
     }
+
 
     /**
      * Updates a user in the database.
@@ -318,20 +336,21 @@ public class DatabaseHandler {
         String query = isInbox ? "SELECT * FROM messages WHERE receiver = ?" : "SELECT * FROM messages WHERE sender = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, username);
-            System.out.println("Executing query: " + stmt);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     Timestamp timestamp = rs.getTimestamp("timestamp");
                     LocalDateTime localDateTime = timestamp != null ? timestamp.toLocalDateTime() : null;
 
+                    String sender = rs.getString("sender");
+                    String receiver = rs.getString("receiver");
+
                     Message message = new Message(
-                            rs.getString("sender"),
-                            rs.getString("receiver"),
+                            sender != null ? sender : "REMOVED",
+                            receiver != null ? receiver : "REMOVED",
                             rs.getString("title"),
                             rs.getString("content"),
                             localDateTime
                     );
-                    System.out.println("Fetched message: " + message);
                     messages.add(message);
                 }
             }
@@ -340,6 +359,7 @@ public class DatabaseHandler {
         }
         return messages;
     }
+
 
     /**
      * Checks if a user has been removed from the database.
