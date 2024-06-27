@@ -6,7 +6,7 @@ package com.srdc.messageapp;
  * It also checks the validity of the user every 5 seconds to ensure the user is still active or has not been removed.
  * The class extends the Thread class to run in a separate thread.
  * Implying that every client connection will be handled in a separate thread.
-*/
+ */
 
 import java.io.*;
 import java.net.*;
@@ -32,7 +32,7 @@ public class ClientHandler extends Thread {
 
     /**
      * Constructor for ClientHandler with parameters
-     * 
+     *
      * @param socket    the client socket
      * @param dbHandler the database handler
      * @throws IOException if an error occurs during I/O operations
@@ -138,7 +138,7 @@ public class ClientHandler extends Thread {
      * the provided username and password. If the user is successfully
      * authenticated,
      * the user object is stored in the currentUser field.
-     * 
+     *
      * @param st the string tokenizer containing the username and password
      */
     private void handleLogin(StringTokenizer st) {
@@ -179,7 +179,7 @@ public class ClientHandler extends Thread {
      * Handles the send message request from the client. The message is sent from
      * the current user to the specified receiver. The message is saved in the
      * database.
-     * 
+     *
      * @param st the string tokenizer containing the receiver, title, and message
      */
     private void handleSendMsg(StringTokenizer st) {
@@ -198,14 +198,14 @@ public class ClientHandler extends Thread {
         String messageContent = st.nextToken();
         Message message = new Message(sender, receiver, title, messageContent, timestamp);
         dbHandler.saveMessage(message);
-        output.println("\nMessage sent successfully at " + timestamp);
+        output.println("\nMessage sent successfully at " + timestamp.format(TIMESTAMP_FORMATTER));
     }
 
     /**
      * Handles the add user request from the client. The user is added to the
      * database with the provided details. The user must be an admin to perform this
      * operation.
-     * 
+     *
      * @param st the string tokenizer containing the user details
      */
     private void handleAddUser(StringTokenizer st) {
@@ -261,7 +261,7 @@ public class ClientHandler extends Thread {
     /**
      * Handles the remove user request from the client. The user is removed from the
      * database. The user must be an admin to perform this operation.
-     * 
+     *
      * @param st the string tokenizer containing the username
      */
     private void handleRemoveUser(StringTokenizer st) {
@@ -284,7 +284,7 @@ public class ClientHandler extends Thread {
     /**
      * Handles the update user request from the client. The user details are updated
      * in the database. The user must be an admin to perform this operation.
-     * 
+     *
      * @param st the string tokenizer containing the user details
      */
     private void handleUpdateUser(StringTokenizer st) {
@@ -370,29 +370,31 @@ public class ClientHandler extends Thread {
             List<Message> messages = dbHandler.getMessages(currentUser.getUsername(), isInbox);
             if (isInbox) {
                 output.println("\nInbox Messages:");
+                output.println("-----------------------------------------------------------------------------------------------------------");
+                output.println(String.format("%-15s %-20s %-50s %-20s", "FROM", "TITLE", "CONTENT", "TIMESTAMP"));
             } else {
                 output.println("\nOutbox Messages:");
+                output.println("-----------------------------------------------------------------------------------------------------------");
+                output.println(String.format("%-15s %-20s %-50s %-20s", "TO", "TITLE", "CONTENT", "TIMESTAMP"));
             }
-            output.println("---------------------------------------------------");
+            output.println("-----------------------------------------------------------------------------------------------------------");
             for (Message message : messages) {
                 if (isInbox) {
-                    output.println("From: " + message.getSender());
+                    output.println(String.format("%-15s %-20s %-50s %-20s", message.getSender(), message.getTitle(), message.getContent(), message.getTimestamp().format(TIMESTAMP_FORMATTER)));
                 } else {
-                    output.println("To: " + message.getReceiver());
+                    output.println(String.format("%-15s %-20s %-50s %-20s", message.getReceiver(), message.getTitle(), message.getContent(), message.getTimestamp().format(TIMESTAMP_FORMATTER)));
                 }
-                output.println("Title: " + message.getTitle());
-                output.println("Message: " + message.getContent());
-                output.println((isInbox ? "Received: " : "Sent: ") + message.getTimestamp().format(TIMESTAMP_FORMATTER));
-                output.println("---------------------------------------------------");
             }
+            output.println("-----------------------------------------------------------------------------------------------------------");
         } catch (Exception e) {
             output.println("\nError retrieving messages: " + e.getMessage());
         }
     }
 
+
     /**
      * Checks if the date string is in the correct format (YYYY-MM-DD).
-     * 
+     *
      * @param dateStr the date string to check
      * @return true if the date string is in the correct format, false otherwise
      */
@@ -407,7 +409,7 @@ public class ClientHandler extends Thread {
 
     /**
      * Checks if the current user is an admin and prints an error message if not.
-     * 
+     *
      * @return true if the current user is an admin, false otherwise
      */
     private boolean isAdmin() {
