@@ -14,6 +14,7 @@ import java.util.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @SuppressWarnings("ALL")
 public class DatabaseHandler {
@@ -312,52 +313,30 @@ public class DatabaseHandler {
      * @param username the username of the user
      * @return a list of Message objects
      */
-    public List<Message> getInbox(String username) {
+    public List<Message> getMessages(String username, boolean isInbox) {
         List<Message> messages = new ArrayList<>();
-        String query = "SELECT * FROM messages WHERE receiver = ?";
+        String query = isInbox ? "SELECT * FROM messages WHERE receiver = ?" : "SELECT * FROM messages WHERE sender = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, username);
+            System.out.println("Executing query: " + stmt);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    Message message = new Message(
-                            rs.getString("sender"),
-                            rs.getString("receiver"),
-                            rs.getString("title"),
-                            rs.getString("content"),
-                            rs.getTimestamp("timestamp").toLocalDateTime());
-                    messages.add(message);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Error fetching inbox: " + e.getMessage());
-        }
-        return messages;
-    }
+                    Timestamp timestamp = rs.getTimestamp("timestamp");
+                    LocalDateTime localDateTime = timestamp != null ? timestamp.toLocalDateTime() : null;
 
-    /**
-     * Fetches messages from the database for a given user's outbox.
-     * 
-     * @param username the username of the user
-     * @return a list of Message objects
-     */
-    public List<Message> getOutbox(String username) {
-        List<Message> messages = new ArrayList<>();
-        String query = "SELECT * FROM messages WHERE sender = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, username);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
                     Message message = new Message(
                             rs.getString("sender"),
                             rs.getString("receiver"),
                             rs.getString("title"),
                             rs.getString("content"),
-                            rs.getTimestamp("timestamp").toLocalDateTime());
+                            localDateTime
+                    );
+                    System.out.println("Fetched message: " + message);
                     messages.add(message);
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error fetching outbox: " + e.getMessage());
+            e.printStackTrace();
         }
         return messages;
     }
