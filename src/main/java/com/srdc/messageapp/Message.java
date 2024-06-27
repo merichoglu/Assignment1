@@ -1,3 +1,4 @@
+package com.srdc.messageapp;
 
 /**
  * Represents a message with sender, receiver, title, content, and timestamp.

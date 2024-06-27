@@ -1,3 +1,4 @@
+package com.srdc.messageapp;
 
 /**
  * Represents a user in the system.

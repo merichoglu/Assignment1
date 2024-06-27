@@ -1,3 +1,5 @@
+package com.srdc.messageapp;
+
 /**
  * The Server class represents a server that listens for client connections and handles them using a ClientHandler.
  */

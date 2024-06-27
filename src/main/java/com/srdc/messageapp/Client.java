@@ -1,3 +1,5 @@
+package com.srdc.messageapp;
+
 /**
  * The Client class represents a client that connects to a server and sends requests to it.
  */

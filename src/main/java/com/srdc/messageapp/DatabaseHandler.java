@@ -1,3 +1,4 @@
+package com.srdc.messageapp;
 
 /*
  * This class is responsible for handling all database operations.
