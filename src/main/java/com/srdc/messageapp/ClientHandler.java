@@ -28,6 +28,7 @@ public class ClientHandler extends Thread {
     private User currentUser;
     private boolean running = true;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
      * Constructor for ClientHandler with parameters
@@ -74,8 +75,8 @@ public class ClientHandler extends Thread {
                     case "REMOVEUSER" -> handleRemoveUser(st);
                     case "UPDATEUSER" -> handleUpdateUser(st);
                     case "LISTUSERS" -> handleListUsers();
-                    case "GETINBOX" -> handleGetInbox();
-                    case "GETOUTBOX" -> handleGetOutbox();
+                    case "GETINBOX" -> handleGetMessages(true);
+                    case "GETOUTBOX" -> handleGetMessages(false);
                     default -> output.println("\nUnknown command");
                 }
             } catch (IOException e) {
@@ -343,77 +344,49 @@ public class ClientHandler extends Thread {
         try {
             List<User> users = dbHandler.listUsers(currentUser);
             output.println("\nUser List:");
-            output.println("---------------------------------------------------");
+            output.println("---------------------------------------------------------------------------------------------------------------------");
+            output.println(String.format("%-15s %-15s %-15s %-10s %-30s %-20s %-10s", "USERNAME", "NAME", "SURNAME", "GENDER", "EMAIL", "LOCATION", "ADMIN"));
+            output.println("---------------------------------------------------------------------------------------------------------------------");
             for (User user : users) {
-                output.println("Username: " + user.getUsername());
-                output.println("Name: " + user.getName() + " " + user.getSurname());
-                output.println("Email: " + user.getEmail());
-                output.println("Location: " + user.getLocation());
-                output.println("Admin: " + user.isAdmin());
-                output.println("---------------------------------------------------");
+                output.println(String.format("%-15s %-15s %-15s %-10s %-30s %-20s %-10s", user.getUsername(), user.getName(), user.getSurname(), user.getGender(), user.getEmail(), user.getLocation(), user.isAdmin()));
             }
+            output.println("---------------------------------------------------------------------------------------------------------------------");
         } catch (Exception e) {
             output.println("\nError listing users: " + e.getMessage());
         }
     }
 
     /**
-     * Handles the get inbox request from the client. The inbox messages are
+     * Handles the get inbox / outbox request from the client. The inbox / outbox messages are
      * retrieved
      * from the database and displayed to the client.
      */
-    private void handleGetInbox() {
+    private void handleGetMessages(boolean isInbox) {
         if (currentUser == null) {
             output.println("\nPermission denied. User not authenticated.");
             return;
         }
         try {
-            List<Message> inbox = dbHandler.getInbox(currentUser.getUsername());
-            output.println("\nInbox Messages:");
-            output.println("---------------------------------------------------");
-            for (Message message : inbox) {
-                if (!dbHandler.userExists(message.getSender())) {
-                    output.println("From: " + message.getSender() + " (account deleted)");
-                } else {
-                    output.println("From: " + message.getSender());
-                }
-                output.println("Title: " + message.getTitle());
-                output.println("Message: " + message.getContent());
-                output.println("Received: " + message.getTimestamp());
-                output.println("---------------------------------------------------");
+            List<Message> messages = dbHandler.getMessages(currentUser.getUsername(), isInbox);
+            if (isInbox) {
+                output.println("\nInbox Messages:");
+            } else {
+                output.println("\nOutbox Messages:");
             }
-        } catch (Exception e) {
-            output.println("\nError retrieving inbox: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Handles the get outbox request from the client. The outbox messages are
-     * retrieved
-     * from the database and displayed to the client.
-     */
-    private void handleGetOutbox() {
-        if (currentUser == null) {
-            output.println("\nPermission denied. User not authenticated.");
-            return;
-        }
-        try {
-            List<Message> outbox = dbHandler.getOutbox(currentUser.getUsername());
-            output.println("\nOutbox Messages:");
             output.println("---------------------------------------------------");
-            for (Message message : outbox) {
-                if (!dbHandler.userExists(message.getReceiver())) {
-                    output.println("To: " + message.getReceiver() + " (account deleted)");
+            for (Message message : messages) {
+                if (isInbox) {
+                    output.println("From: " + message.getSender());
                 } else {
                     output.println("To: " + message.getReceiver());
                 }
                 output.println("Title: " + message.getTitle());
                 output.println("Message: " + message.getContent());
-                output.println("Sent: " + message.getTimestamp());
+                output.println((isInbox ? "Received: " : "Sent: ") + message.getTimestamp().format(TIMESTAMP_FORMATTER));
                 output.println("---------------------------------------------------");
             }
         } catch (Exception e) {
-            output.println("\nError retrieving outbox: " + e.getMessage());
+            output.println("\nError retrieving messages: " + e.getMessage());
         }
     }
 
