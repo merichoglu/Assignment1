@@ -11,11 +11,14 @@ package com.srdc.messageapp;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 @SuppressWarnings("ALL")
 public class DatabaseHandler {
 
-    private final Connection connection;
+    private Connection connection;
 
     /**
      * Constructor for DatabaseHandler with parameters
@@ -29,6 +32,52 @@ public class DatabaseHandler {
     public DatabaseHandler(String url, String user, String password) throws Exception {
         connection = DriverManager.getConnection(url, user, password);
         System.out.println("Database connection successful.");
+    }
+
+    /**
+     * Check whether database is initialized or not. If not, generate default database.
+     */
+    private void initializeDatabase() {
+        if (!isDatabaseConnected()) {
+            System.out.println("Database not connected. Executing SQL script...");
+            executeSqlScript("src/main/resources/dbs.sql");
+        } else {
+            System.out.println("Database is already connected.");
+        }
+    }
+
+    /**
+     * check database connection
+     */
+    private boolean isDatabaseConnected() {
+        try {
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgre", "postgre", "5611Me_0");
+            return connection != null && !connection.isClosed();
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Executer function for dbs.sql file if needed
+     */
+    private void executeSqlScript(String filePath) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath));
+             Statement stmt = connection.createStatement()) {
+
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+                if (line.trim().endsWith(";")) {
+                    stmt.execute(sb.toString());
+                    sb.setLength(0);
+                }
+            }
+            System.out.println("SQL script executed successfully.");
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
