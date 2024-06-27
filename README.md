@@ -31,13 +31,7 @@ This is a simple chat application implemented in Java. The application consists 
    ```
    Note: repo is currently private.
 
-2. Compile the Java files:
-
-   ```sh
-   javac -cp lib/postgresql-42.7.3.jar -d out/production/SRDC src/main/java/com/srdc/messageapp/*.java
-   ```
-
-3. Set up your database:
+2. Set up your database:
    - Create a database and necessary tables. Refer to the `DatabaseHandler.java` for table structure.
    - Update the database connection details in the `DatabaseHandler.java` file.
 
@@ -45,17 +39,9 @@ This is a simple chat application implemented in Java. The application consists 
 
 While inside the **Assignment 1** folder
 
-1. Start the server:
+1. Run `start_server.bat` file to start the server
 
-   ```sh
-   java -cp "lib/postgresql-42.7.3.jar" src/main/java/com/srdc/messageapp/Server.java
-   ```
-
-2. Start the client(s):
-
-   ```sh
-   java src/main/java/com/srdc/messageapp/Client.java
-   ```
+2. Run `start_client.bat` file to start a client. Since the app supports multiple threads, one can open any number of clients at the same time.
 
    - Follow the prompts to connect to the server and start chatting.
 
