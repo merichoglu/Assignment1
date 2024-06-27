@@ -26,9 +26,10 @@ This is a simple chat application implemented in Java. The application consists 
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/yourusername/chat-application.git
+   git clone https://github.com/feladorhet/Assignment1.git
    cd chat-application
    ```
+   Note: repo is currently private.
 
 2. Compile the Java files:
 
@@ -42,7 +43,7 @@ This is a simple chat application implemented in Java. The application consists 
 
 ### Running the Application
 
-While inside the *Assignment 1* folder
+While inside the **Assignment 1** folder
 
 1. Start the server:
 
