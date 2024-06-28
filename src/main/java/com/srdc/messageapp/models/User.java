@@ -32,7 +32,7 @@ public class User {
      * @param isAdmin   true if the user is an admin, false otherwise
      */
     public User(String username, String name, String surname, Date birthdate, String gender, String email,
-            String location, String password, boolean isAdmin) {
+                String location, String password, boolean isAdmin) {
         this.username = username;
         this.name = name;
         this.surname = surname;

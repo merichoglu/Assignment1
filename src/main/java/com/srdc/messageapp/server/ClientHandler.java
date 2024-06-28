@@ -11,6 +11,7 @@ package com.srdc.messageapp.server;
 import com.srdc.messageapp.database.DatabaseHandler;
 import com.srdc.messageapp.models.Message;
 import com.srdc.messageapp.models.User;
+
 import java.io.*;
 import java.net.*;
 import java.time.LocalDate;
@@ -24,14 +25,14 @@ import java.util.StringTokenizer;
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public class ClientHandler extends Thread {
 
-    private final Socket socket;
-    private BufferedReader input;
-    private PrintWriter output;
-    private final DatabaseHandler dbHandler;
-    private User currentUser;
-    private boolean running = true;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final Socket socket;
+    private final DatabaseHandler dbHandler;
+    private BufferedReader input;
+    private PrintWriter output;
+    private User currentUser;
+    private boolean running = true;
 
     /**
      * Constructor for ClientHandler with parameters
@@ -366,6 +367,7 @@ public class ClientHandler extends Thread {
      * Handles the get inbox / outbox request from the client. The inbox / outbox messages are
      * retrieved
      * from the database and displayed to the client.
+     *
      * @param isInbox bool var to decide inbox / outbox
      */
     private void handleGetMessages(boolean isInbox) {

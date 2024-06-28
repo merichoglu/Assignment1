@@ -5,6 +5,7 @@ package com.srdc.messageapp.server;
  */
 
 import com.srdc.messageapp.database.DatabaseHandler;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -34,6 +35,21 @@ public class Server {
     }
 
     /**
+     * Main method to start the server
+     *
+     * @param args the command line arguments
+     * @throws Exception if an error occurs during server initialization
+     */
+    public static void main(String[] args) throws Exception {
+        String dbUrl = "jdbc:postgresql://localhost:5432/postgres";
+        String dbUser = "postgres";
+        String dbPassword = "5611Me_0";
+        int port = 5000;
+        Server server = new Server(port, dbUrl, dbUser, dbPassword);
+        server.start();
+    }
+
+    /**
      * Starts the server by accepting client connections and creating a new
      * ClientHandler for each connection.
      */
@@ -56,20 +72,5 @@ public class Server {
             } catch (IOException e) {
                 System.out.println("Error accepting client connection: " + e.getMessage());
             }
-    }
-
-    /**
-     * Main method to start the server
-     * 
-     * @param args the command line arguments
-     * @throws Exception if an error occurs during server initialization
-     */
-    public static void main(String[] args) throws Exception {
-        String dbUrl = "jdbc:postgresql://localhost:5432/postgres";
-        String dbUser = "postgres";
-        String dbPassword = "5611Me_0";
-        int port = 5000;
-        Server server = new Server(port, dbUrl, dbUser, dbPassword);
-        server.start();
     }
 }

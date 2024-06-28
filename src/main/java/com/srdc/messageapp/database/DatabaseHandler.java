@@ -6,10 +6,11 @@ package com.srdc.messageapp.database;
  * user authentication, user management, and message management.
  * It also provides methods for checking if a user exists and if a user is removed.
  * The class is used by the Server class to interact with the database.
-*/
+ */
 
 import com.srdc.messageapp.models.Message;
 import com.srdc.messageapp.models.User;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class DatabaseHandler {
 
     /**
      * Constructor for DatabaseHandler with parameters
-     * 
+     *
      * @param url      the URL of the database
      * @param user     the username for the database connection
      * @param password the password for the database connection
@@ -86,7 +87,7 @@ public class DatabaseHandler {
     /**
      * Authenticates a user by checking the username and password against the
      * database.
-     * 
+     *
      * @param username the username of the user
      * @param password the password of the user
      * @return the User object if authentication is successful, null otherwise
@@ -118,7 +119,7 @@ public class DatabaseHandler {
 
     /**
      * Checks if a user with the given username exists in the database.
-     * 
+     *
      * @param username the username to check
      * @return true if the user exists, false otherwise
      */
@@ -137,7 +138,7 @@ public class DatabaseHandler {
 
     /**
      * Adds a new user to the database.
-     * 
+     *
      * @param admin   the admin user adding the new user
      * @param newUser the new user to add
      * @throws Exception if the admin user is not an admin
@@ -170,7 +171,7 @@ public class DatabaseHandler {
 
     /**
      * Removes a user from the database.
-     * 
+     *
      * @param admin    the admin user removing the user
      * @param username the username of the user to remove
      * @throws Exception if the admin user is not an admin or user does not exist
@@ -212,7 +213,7 @@ public class DatabaseHandler {
 
     /**
      * Updates a user in the database.
-     * 
+     *
      * @param admin       the admin user updating the user
      * @param updatedUser the updated user information
      * @throws Exception if the admin user is not an admin or some other SQL error
@@ -246,7 +247,7 @@ public class DatabaseHandler {
 
     /**
      * Fetches a user from the database by username.
-     * 
+     *
      * @param username the username of the user to fetch
      * @return the User object if found, null otherwise
      */
@@ -276,7 +277,7 @@ public class DatabaseHandler {
 
     /**
      * Lists all users in the database.
-     * 
+     *
      * @param admin the admin user listing the users
      * @return a list of User objects
      * @throws Exception if the admin user is not an admin
@@ -309,7 +310,7 @@ public class DatabaseHandler {
 
     /**
      * Saves a message to the database.
-     * 
+     *
      * @param message the message to save
      */
     public void saveMessage(Message message) {
@@ -329,7 +330,7 @@ public class DatabaseHandler {
 
     /**
      * Fetches messages from the database for a given user's inbox.
-     * 
+     *
      * @param username the username of the user
      * @return a list of Message objects
      */
@@ -365,7 +366,7 @@ public class DatabaseHandler {
 
     /**
      * Checks if a user has been removed from the database.
-     * 
+     *
      * @param username the username of the user
      * @return true if the user is removed, false otherwise
      */

@@ -40,6 +40,11 @@ public class Client {
         }
     }
 
+    public static void main(String[] args) {
+        Client client = new Client("127.0.0.1", 5000);
+        client.start();
+    }
+
     /**
      * Method that reads user input by first forcing login.
      * When logged in, user can access different commands depending on their privilege.
@@ -199,10 +204,5 @@ public class Client {
             System.out.println(String.format("%-15s %-20s %-20s %-50s", parts[i], parts[i + 1], parts[i + 3], parts[i + 2]));
         }
         System.out.println("-------------------------------------------------------------------------------------------------------");
-    }
-
-    public static void main(String[] args) {
-        Client client = new Client("127.0.0.1", 5000);
-        client.start();
     }
 }
