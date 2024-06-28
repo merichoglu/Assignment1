@@ -132,6 +132,7 @@ public class ClientHandler extends Thread {
             if (output != null) {
                 output.close();
             }
+
         } catch (IOException e) {
             System.err.println("Error closing client: " + e.getMessage());
         }
