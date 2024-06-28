@@ -1,6 +1,6 @@
 package com.srdc.messageapp.server;
 
-/*
+/**
  * This class is responsible for handling client requests and responses.
  * It reads input from the client, processes the request, and sends a response back.
  * It also checks the validity of the user every 5 seconds to ensure the user is still active or has not been removed.

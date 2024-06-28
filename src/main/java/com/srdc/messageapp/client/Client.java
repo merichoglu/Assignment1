@@ -1,6 +1,12 @@
 package com.srdc.messageapp.client;
 
+/**
+ * This is the class definition of Client that user interacts with.
+ * It takes inputs address and port as input, and initializes client.
+ */
+
 import com.srdc.messageapp.server.ClientHandler;
+
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
@@ -15,6 +21,12 @@ public class Client {
     private boolean loggedIn;
     private boolean isAdmin;
 
+    /**
+     * Constructor for Client with
+     *
+     * @param address the IP address
+     * @param port    the port server runs on
+     */
     public Client(String address, int port) {
         try {
             socket = new Socket(address, port);
@@ -28,6 +40,12 @@ public class Client {
         }
     }
 
+    /**
+     * Method that reads user input by first forcing login.
+     * When logged in, user can access different commands depending on their privilege.
+     *
+     * @return sb StringBuilder object for server-side to handle operations, protocol is ":::"
+     */
     private String readUserInput() {
         if (!loggedIn) {
             System.out.print("Please log in.\nUsername: ");
@@ -91,6 +109,11 @@ public class Client {
         return sb.toString();
     }
 
+    /**
+     * Method to start client. First check if user is logged in, else force to do so.
+     * Run an infinite loop to take input constantly. That is,
+     * client will be running until it's closed.
+     */
     public void start() {
         if (socket == null || input == null || output == null) {
             System.out.println("Client not properly initialized. Exiting...");
@@ -138,6 +161,10 @@ public class Client {
         }
     }
 
+    /**
+     * Format the user list output taken from server-side by detokenizing.
+     * Protocol is again ":::".
+     */
     private void formatListUsers(String response) {
         String[] parts = response.split(":::");
         System.out.println("\nUser List:");
@@ -151,6 +178,10 @@ public class Client {
         System.out.println("-----------------------------------------------------------------------------------------------------------------------");
     }
 
+    /**
+     * Format the inbox / outbox output taken from server-side by detokenizing.
+     * Protocol is again ":::".
+     */
     private void formatMessages(String response) {
         String[] parts = response.split(":::");
         boolean isInbox = response.startsWith("GETINBOX:::");
