@@ -364,6 +364,7 @@ public class ClientHandler extends Thread {
      * Handles the get inbox / outbox request from the client. The inbox / outbox messages are
      * retrieved
      * from the database and displayed to the client.
+     * @param isInbox bool var to decide inbox / outbox
      */
     private void handleGetMessages(boolean isInbox) {
         if (currentUser == null) {
