@@ -20,6 +20,7 @@ public class Client {
     private Scanner scanner;
     private boolean loggedIn;
     private boolean isAdmin;
+    private boolean running = true;
 
     /**
      * Constructor for Client with
@@ -128,7 +129,7 @@ public class Client {
         Thread responseReader = new Thread(() -> {
             try {
                 String response;
-                while ((response = input.readLine()) != null) {
+                while (running && (response = input.readLine()) != null) {
                     if (response.isEmpty()) {
                         continue;
                     }
@@ -144,6 +145,9 @@ public class Client {
                         } else if (response.contains("Logout successful")) {
                             loggedIn = false;
                             isAdmin = false;
+                        } else if (response.contains("Client will now close")) {
+                            running = false;
+                            closeClient();
                         }
                     }
                 }
@@ -153,7 +157,7 @@ public class Client {
         });
         responseReader.start();
 
-        while (true) {
+        while (running) {
             String userInput = readUserInput();
             if (userInput != null) {
                 output.println(userInput);
@@ -204,5 +208,22 @@ public class Client {
             System.out.println(String.format("%-15s %-20s %-20s %-50s", parts[i], parts[i + 1], parts[i + 3], parts[i + 2]));
         }
         System.out.println("-------------------------------------------------------------------------------------------------------");
+    }
+
+    private void closeClient() {
+        try {
+            if (socket != null) {
+                socket.close();
+            }
+            if (input != null) {
+                input.close();
+            }
+            if (output != null) {
+                output.close();
+            }
+            System.exit(0); // Exit the program
+        } catch (IOException e) {
+            System.err.println("Error closing client: " + e.getMessage());
+        }
     }
 }
