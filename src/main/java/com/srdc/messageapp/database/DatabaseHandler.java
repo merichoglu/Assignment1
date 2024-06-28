@@ -1,6 +1,6 @@
 package com.srdc.messageapp.database;
 
-/*
+/**
  * This class is responsible for handling all database operations.
  * It establishes a connection to the database and provides methods for
  * user authentication, user management, and message management.

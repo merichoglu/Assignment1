@@ -11,7 +11,7 @@ import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 
-@SuppressWarnings({"InfiniteLoopStatement", "BusyWait"})
+@SuppressWarnings({"BusyWait", "ThrowablePrintedToSystemOut"})
 public class Client {
 
     private Socket socket;
@@ -178,11 +178,11 @@ public class Client {
         String[] parts = response.split(":::");
         System.out.println("\nUser List:");
         System.out.println("-----------------------------------------------------------------------------------------------------------------------");
-        System.out.println(String.format("%-15s %-15s %-15s %-10s %-30s %-20s %-10s", "USERNAME", "NAME", "SURNAME", "GENDER", "EMAIL", "LOCATION", "ADMIN"));
+        System.out.printf("%-15s %-15s %-15s %-10s %-30s %-20s %-10s%n", "USERNAME", "NAME", "SURNAME", "GENDER", "EMAIL", "LOCATION", "ADMIN");
         System.out.println("-----------------------------------------------------------------------------------------------------------------------");
         for (int i = 1; i < parts.length; i += 7) {
-            System.out.println(String.format("%-15s %-15s %-15s %-10s %-30s %-20s %-10s",
-                    parts[i], parts[i + 1], parts[i + 2], parts[i + 3], parts[i + 4], parts[i + 5], parts[i + 6]));
+            System.out.printf("%-15s %-15s %-15s %-10s %-30s %-20s %-10s%n",
+                    parts[i], parts[i + 1], parts[i + 2], parts[i + 3], parts[i + 4], parts[i + 5], parts[i + 6]);
         }
         System.out.println("-----------------------------------------------------------------------------------------------------------------------");
     }
@@ -197,15 +197,15 @@ public class Client {
         if (isInbox) {
             System.out.println("\nInbox Messages:");
             System.out.println("-------------------------------------------------------------------------------------------------------");
-            System.out.println(String.format("%-15s %-20s %-20s %-50s", "FROM", "TITLE", "TIMESTAMP", "CONTENT"));
+            System.out.printf("%-15s %-20s %-20s %-50s%n", "FROM", "TITLE", "TIMESTAMP", "CONTENT");
         } else {
             System.out.println("\nOutbox Messages:");
             System.out.println("-------------------------------------------------------------------------------------------------------");
-            System.out.println(String.format("%-15s %-20s %-20s %-50s", "TO", "TITLE", "TIMESTAMP", "CONTENT"));
+            System.out.printf("%-15s %-20s %-20s %-50s%n", "TO", "TITLE", "TIMESTAMP", "CONTENT");
         }
         System.out.println("-------------------------------------------------------------------------------------------------------");
         for (int i = 1; i < parts.length; i += 4) {
-            System.out.println(String.format("%-15s %-20s %-20s %-50s", parts[i], parts[i + 1], parts[i + 3], parts[i + 2]));
+            System.out.printf("%-15s %-20s %-20s %-50s%n", parts[i], parts[i + 1], parts[i + 3], parts[i + 2]);
         }
         System.out.println("-------------------------------------------------------------------------------------------------------");
     }

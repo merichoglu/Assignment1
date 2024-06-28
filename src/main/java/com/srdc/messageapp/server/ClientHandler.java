@@ -39,7 +39,6 @@ public class ClientHandler extends Thread {
      *
      * @param socket    the client socket
      * @param dbHandler the database handler
-     * @throws IOException if an error occurs during I/O operations
      */
     public ClientHandler(Socket socket, DatabaseHandler dbHandler) {
         this.socket = socket;
@@ -358,7 +357,7 @@ public class ClientHandler extends Thread {
                 sb.append(String.join(":::", user.getUsername(), user.getName(), user.getSurname(), user.getGender(), user.getEmail(), user.getLocation(), String.valueOf(user.isAdmin())));
                 sb.append(":::");
             }
-            output.println(sb.toString());
+            output.println(sb);
         } catch (Exception e) {
             output.println("\nError listing users: " + e.getMessage());
         }
@@ -388,7 +387,7 @@ public class ClientHandler extends Thread {
                         message.getTimestamp().format(TIMESTAMP_FORMATTER)));
                 sb.append(":::");
             }
-            output.println(sb.toString());
+            output.println(sb);
         } catch (Exception e) {
             output.println("\nError retrieving messages: " + e.getMessage());
         }
