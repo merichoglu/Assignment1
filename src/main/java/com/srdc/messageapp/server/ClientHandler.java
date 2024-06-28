@@ -1,4 +1,4 @@
-package com.srdc.messageapp;
+package com.srdc.messageapp.server;
 
 /*
  * This class is responsible for handling client requests and responses.
@@ -8,6 +8,9 @@ package com.srdc.messageapp;
  * Implying that every client connection will be handled in a separate thread.
  */
 
+import com.srdc.messageapp.database.DatabaseHandler;
+import com.srdc.messageapp.models.Message;
+import com.srdc.messageapp.models.User;
 import java.io.*;
 import java.net.*;
 import java.time.LocalDate;
@@ -347,14 +350,13 @@ public class ClientHandler extends Thread {
         }
         try {
             List<User> users = dbHandler.listUsers(currentUser);
-            output.println("\nUser List:");
-            output.println("---------------------------------------------------------------------------------------------------------------------");
-            output.println(String.format("%-15s %-15s %-15s %-10s %-30s %-20s %-10s", "USERNAME", "NAME", "SURNAME", "GENDER", "EMAIL", "LOCATION", "ADMIN"));
-            output.println("---------------------------------------------------------------------------------------------------------------------");
+            StringBuilder sb = new StringBuilder();
+            sb.append("LISTUSERS:::");
             for (User user : users) {
-                output.println(String.format("%-15s %-15s %-15s %-10s %-30s %-20s %-10s", user.getUsername(), user.getName(), user.getSurname(), user.getGender(), user.getEmail(), user.getLocation(), user.isAdmin()));
+                sb.append(String.join(":::", user.getUsername(), user.getName(), user.getSurname(), user.getGender(), user.getEmail(), user.getLocation(), String.valueOf(user.isAdmin())));
+                sb.append(":::");
             }
-            output.println("---------------------------------------------------------------------------------------------------------------------");
+            output.println(sb.toString());
         } catch (Exception e) {
             output.println("\nError listing users: " + e.getMessage());
         }
@@ -373,24 +375,17 @@ public class ClientHandler extends Thread {
         }
         try {
             List<Message> messages = dbHandler.getMessages(currentUser.getUsername(), isInbox);
-            if (isInbox) {
-                output.println("\nInbox Messages:");
-                output.println("-----------------------------------------------------------------------------------------------------------");
-                output.println(String.format("%-15s %-20s %-50s %-20s", "FROM", "TITLE", "CONTENT", "TIMESTAMP"));
-            } else {
-                output.println("\nOutbox Messages:");
-                output.println("-----------------------------------------------------------------------------------------------------------");
-                output.println(String.format("%-15s %-20s %-50s %-20s", "TO", "TITLE", "CONTENT", "TIMESTAMP"));
-            }
-            output.println("-----------------------------------------------------------------------------------------------------------");
+            StringBuilder sb = new StringBuilder();
+            sb.append(isInbox ? "GETINBOX:::" : "GETOUTBOX:::");
             for (Message message : messages) {
-                if (isInbox) {
-                    output.println(String.format("%-15s %-20s %-50s %-20s", message.getSender(), message.getTitle(), message.getContent(), message.getTimestamp().format(TIMESTAMP_FORMATTER)));
-                } else {
-                    output.println(String.format("%-15s %-20s %-50s %-20s", message.getReceiver(), message.getTitle(), message.getContent(), message.getTimestamp().format(TIMESTAMP_FORMATTER)));
-                }
+                sb.append(String.join(":::",
+                        isInbox ? message.getSender() : message.getReceiver(),
+                        message.getTitle(),
+                        message.getContent(),
+                        message.getTimestamp().format(TIMESTAMP_FORMATTER)));
+                sb.append(":::");
             }
-            output.println("-----------------------------------------------------------------------------------------------------------");
+            output.println(sb.toString());
         } catch (Exception e) {
             output.println("\nError retrieving messages: " + e.getMessage());
         }

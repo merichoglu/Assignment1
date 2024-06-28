@@ -1,9 +1,10 @@
-package com.srdc.messageapp;
+package com.srdc.messageapp.server;
 
 /**
  * The Server class represents a server that listens for client connections and handles them using a ClientHandler.
  */
 
+import com.srdc.messageapp.database.DatabaseHandler;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;

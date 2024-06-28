@@ -1,4 +1,4 @@
-package com.srdc.messageapp;
+package com.srdc.messageapp.models;
 
 /**
  * Represents a message with sender, receiver, title, content, and timestamp.

@@ -1,4 +1,4 @@
-package com.srdc.messageapp;
+package com.srdc.messageapp.database;
 
 /*
  * This class is responsible for handling all database operations.
@@ -8,6 +8,8 @@ package com.srdc.messageapp;
  * The class is used by the Server class to interact with the database.
 */
 
+import com.srdc.messageapp.models.Message;
+import com.srdc.messageapp.models.User;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

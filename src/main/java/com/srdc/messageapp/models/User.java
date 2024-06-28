@@ -1,4 +1,4 @@
-package com.srdc.messageapp;
+package com.srdc.messageapp.models;
 
 /**
  * Represents a user in the system.
